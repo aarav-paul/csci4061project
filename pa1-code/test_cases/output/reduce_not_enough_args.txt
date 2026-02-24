@@ -1,0 +1,4 @@
+$ ./reduce x
+Usage: reduce <read dir> <out file> <start ip> <end ip>
+$ exit
+exit

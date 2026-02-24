@@ -1,0 +1,5 @@
+$ rm -rf ./intermediate/*
+$ ./map ./intermediate/0.tbl ./logs/0.log
+$ ./test_cases/resources/table_test print_table_path ./intermediate/0.tbl | sort
+$ exit
+exit

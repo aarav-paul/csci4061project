@@ -1,0 +1,8 @@
+$ ./map ./temp.tbl ./logs/0.log
+$ ls | grep temp.tbl
+$ ./reduce ./intermediate ./temp2.tbl 0 256
+$ ls | grep temp2.tbl
+$ rm temp.tbl
+$ rm temp2.tbl
+$ exit
+exit

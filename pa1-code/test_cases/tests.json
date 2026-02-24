@@ -1,0 +1,224 @@
+{
+    "name": "Programming Assignment 1",
+    "tests": [
+        {
+            "name": "Empty table free",
+            "description": "Test that freeing an empty table causes no errors",
+            "command": "./test_cases/resources/table_test empty_table_free",
+            "output_file": "test_cases/output/table_test.txt",
+            "points": 0.5
+        },
+        {
+            "name": "Table add",
+            "description": "Test adding 5 buckets with unique IPs to the table",
+            "command": "./test_cases/resources/table_test table_add",
+            "output_file": "test_cases/output/table_test.txt",
+            "points": 0.5
+        },
+        {
+            "name": "Table add collision",
+            "description": "Test adding 100 buckets with unique IPs to the table, ensuring collision",
+            "command": "./test_cases/resources/table_test table_add_collision",
+            "output_file": "test_cases/output/table_test.txt",
+            "points": 0.5
+        },
+        {
+            "name": "Table print",
+            "description": "Test that printing the table works properly, and is in the correct format",
+            "command": "./test_cases/resources/table_test table_print",
+            "output_file": "test_cases/output/table_print.txt",
+            "points": 0.5
+        },
+        {
+            "name": "Table add and get",
+            "description": "Test adding buckets and retrieving them with table_get",
+            "command": "./test_cases/resources/table_test table_add_and_get",
+            "output_file": "test_cases/output/table_test.txt",
+            "points": 0.5
+        },
+        {
+            "name": "Table add and get collision",
+            "description": "Test adding buckets and retrieving them with table_get, adding enough buckets for hash table collisions",
+            "command": "./test_cases/resources/table_test table_add_and_get_collision",
+            "output_file": "test_cases/output/table_test.txt",
+            "points": 0.5
+        },
+        {
+            "name": "Table to file",
+            "description": "Test that writing a table to a file works",
+            "command": "./test_cases/resources/table_test table_to_file",
+            "output_file": "test_cases/output/table_test.txt",
+            "points": 1
+        },
+        {
+            "name": "Table from file",
+            "description": "Test that you can write and read a table to a file, with both tables containing the same values",
+            "command": "./test_cases/resources/table_test table_from_file",
+            "output_file": "test_cases/output/table_test.txt",
+            "points": 1
+        },
+        {
+            "name": "Mapreduce with not enough args",
+            "description": "Test the mapreduce program to make sure that it checks the number of args properly",
+            "input_file": "test_cases/input/mapreduce_not_enough_args.txt",
+            "output_file": "test_cases/output/mapreduce_not_enough_args.txt",
+            "points": 1
+        },
+        {
+            "name": "Mapreduce with invalid args",
+            "description": "Test the mapreduce program to make sure that it checks the number of args properly",
+            "input_file": "test_cases/input/mapreduce_invalid_args.txt",
+            "output_file": "test_cases/output/mapreduce_invalid_args.txt",
+            "points": 1
+        },
+        {
+            "name": "Mapreduce with invalid directory",
+            "description": "Test the mapreduce program with with an invalid directory argument",
+            "input_file": "test_cases/input/mapreduce_invalid_dir.txt",
+            "output_file": "test_cases/output/mapreduce_invalid_dir.txt",
+            "points": 1
+        },
+
+        {
+            "name": "Number of mapper files",
+            "description": "The mapreduce program creates the correct number of intermediate files (one file / mapper)",
+            "input_file": "test_cases/input/number_of_mapper_files.txt",
+            "output_file": "test_cases/output/number_of_mapper_files.txt",
+            "points": 1
+        },
+        {
+            "name": "Map fail with not enough args",
+            "description": "The map program prints the requested error if it is called with not enough arguments",
+            "input_file": "test_cases/input/map_not_enough_args.txt",
+            "output_file": "test_cases/output/map_not_enough_args.txt",
+            "points": 1
+        },
+        {
+            "name": "Map fail with invalid input file",
+            "description": "The map program fails with an invalid input file. It must print the error message specified in the writeup",
+            "input_file": "test_cases/input/map_fail_with_invalid_file.txt",
+            "output_file": "test_cases/output/map_fail_with_invalid_file.txt",
+            "points": 1
+        },
+        {
+            "name": "Map write to requested file",
+            "description": "The map program writes to the requested file. It should be the second parameter input to the executable",
+            "input_file": "test_cases/input/map_write_to_requested_file.txt",
+            "output_file": "test_cases/output/map_write_to_requested_file.txt",
+            "points": 1
+        },
+        {
+            "name": "Map single file",
+            "description": "The map program correctly maps data from one log file into a table.",
+            "input_file": "test_cases/input/map_single_file.txt",
+            "output_file": "test_cases/output/map_single_file.txt",
+            "points": 1
+        },
+        {
+            "name": "Map multiple files",
+            "description": "The map program correctly maps data from multiple log file into a table.",
+            "input_file": "test_cases/input/map_multiple_files.txt",
+            "output_file": "test_cases/output/map_multiple_files.txt",
+            "points": 1
+        },
+
+        {
+            "name": "Number of reducer files",
+            "description": "The mapreduce program creates the correct number of intermediate files (one file / reducer)",
+            "input_file": "test_cases/input/number_of_reducer_files.txt",
+            "output_file": "test_cases/output/number_of_reducer_files.txt",
+            "points": 1
+        },
+        {
+            "name": "Reduce with not enough args",
+            "description": "The reduce program prints the requested error if it is called with not enough arguments",
+            "input_file": "test_cases/input/reduce_not_enough_args.txt",
+            "output_file": "test_cases/output/reduce_not_enough_args.txt",
+            "points": 1
+        },
+        {
+            "name": "Reduce fail with invalid input directory",
+            "description": "The reduce program fails with an invalid input directory. It must print the error message specified in the writeup",
+            "input_file": "test_cases/input/reduce_fail_with_invalid_dir.txt",
+            "output_file": "test_cases/output/reduce_fail_with_invalid_dir.txt",
+            "points": 1
+        },
+        {
+            "name": "Reduce fail with invalid IP arguments",
+            "description": "The reduce program fails with an invalid IP range (not numbers). It must print the error message specified in the writeup",
+            "command": "./reduce ./intermediate ./out/0.tbl x x",
+            "output_file": "test_cases/output/reduce_fail_with_invalid_ip.txt",
+            "points": 1
+        },
+        {
+            "name": "Reduce with all IPs",
+            "description": "The reduce program is able to accept and operate on all IP addresses",
+            "input_file": "test_cases/input/reduce_with_all_ip.txt",
+            "output_file": "test_cases/output/reduce_with_all_ip.txt",
+            "points": 1
+        },
+        {
+            "name": "Reduce with shortened IP arguments",
+            "description": "The reduce program is able to accept a range of first IP address bytes and only examine those IPs",
+            "input_file": "test_cases/input/reduce_with_shortened_ip.txt",
+            "output_file": "test_cases/output/reduce_with_shortened_ip.txt",
+            "points": 1
+        },
+        {
+            "name": "Reduce with multiple input files",
+            "description": "The reduce program is able to operate on data across multiple input files",
+            "input_file": "test_cases/input/reduce_multiple_input_files.txt",
+            "output_file": "test_cases/output/reduce_multiple_input_files.txt",
+            "points": 1  
+        },
+        {
+            "name": "Reduce write to requested file",
+            "description": "The reduce program writes to the requested file. It should be the second parameter input to the executable",
+            "input_file": "test_cases/input/reduce_write_to_requested_file.txt",
+            "output_file": "test_cases/output/reduce_write_to_requested_file.txt",
+            "points": 1
+        },
+        {
+            "name": "All log files (1/1 mapper/reducer)",
+            "description": "Test that using mapreduce on all of the log files produces the expected output. One mapper and one reducer will be used for this",
+            "input_file": "test_cases/input/mapreduce_all_logs_1_1.txt",
+            "output_file": "test_cases/output/mapreduce_all_logs_1_1.txt",
+            "points": 2
+        },
+        {
+            "name": "All log files (10/1 mapper/reducer)",
+            "description": "Test that using mapreduce on all of the logs produces the expected output. 10 mappers and one reducer will be used",
+            "input_file": "test_cases/input/mapreduce_all_logs_10_1.txt",
+            "output_file": "test_cases/output/mapreduce_all_logs_10_1.txt",
+            "points": 2
+        },
+        {
+            "name": "All log files (1/10 mapper/reducer)",
+            "description": "Test that using mapreduce on all of the logs produces the expected output. one mapper and 10 reducers will be used",
+            "input_file": "test_cases/input/mapreduce_all_logs_1_10.txt",
+            "output_file": "test_cases/output/mapreduce_all_logs_1_10.txt",
+            "points": 2
+        },
+        {
+            "name": "All log files (10/3 mapper/reducer)",
+            "description": "Test that using mapreduce on all of the logs produces the expected output. 10 mappers and 3 reducers will be used",
+            "input_file": "test_cases/input/mapreduce_all_logs_10_3.txt",
+            "output_file": "test_cases/output/mapreduce_all_logs_10_3.txt",
+            "points": 2
+        },
+        {
+            "name": "All log files (10/10 mapper/reducer)",
+            "description": "Test that using mapreduce on all of the logs produces the expected output. 10 mappers and 10 reducers will be used",
+            "input_file": "test_cases/input/mapreduce_all_logs_10_10.txt",
+            "output_file": "test_cases/output/mapreduce_all_logs_10_10.txt",
+            "points": 2
+        },
+        {
+            "name": "All log files (24/255 mapper/reducer)",
+            "description": "Test that using mapreduce on all of the logs produces the expected output. 24 mappers and 255 reducers will be used",
+            "input_file": "test_cases/input/mapreduce_all_logs_24_255.txt",
+            "output_file": "test_cases/output/mapreduce_all_logs_24_255.txt",
+            "points": 2
+        }
+    ]
+}

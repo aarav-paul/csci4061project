@@ -1,0 +1,3 @@
+$ ./mapreduce x 0
+$ exit
+exit

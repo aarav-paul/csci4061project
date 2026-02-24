@@ -1,0 +1,8 @@
+$ rm -rf ./out/*
+$ ./mapreduce ./logs 5 5 > /dev/null
+$ ls ./out | sort
+$ rm -rf ./out/*
+$ ./mapreduce ./logs 1 1 > /dev/null
+$ ls ./out | sort
+$ exit
+exit

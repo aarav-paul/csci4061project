@@ -1,0 +1,4 @@
+$ ./mapreduce x 0
+Usage: mapreduce <directory> <n mappers> <n reducers>
+$ exit
+exit

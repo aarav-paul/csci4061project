@@ -1,0 +1,9 @@
+$ rm -rf ./intermediate/*
+$ rm -rf ./out/*
+$ ./map ./intermediate/0.tbl ./logs/0.log
+$ ./reduce ./intermediate ./out/0.tbl 100 200
+$ ./test_cases/resources/table_test print_table_path ./out/0.tbl | sort
+$ ./test_cases/resources/table_test print_table_path ./out/0.tbl | grep 201.145.94.106
+$ ./test_cases/resources/table_test print_table_path ./out/0.tbl | grep 96.190.136.20
+$ exit
+exit

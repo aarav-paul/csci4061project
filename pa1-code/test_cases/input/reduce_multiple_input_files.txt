@@ -1,0 +1,11 @@
+$ rm -rf ./intermediate/*
+$ rm -rf ./out/*
+$ ./map ./intermediate/0.tbl ./logs/0.log
+$ ./map ./intermediate/1.tbl ./logs/1.log
+$ ./map ./intermediate/2.tbl ./logs/2.log
+$ ./map ./intermediate/3.tbl ./logs/3.log
+$ ./map ./intermediate/4.tbl ./logs/4.log
+$ ./reduce ./intermediate ./out/0.tbl 0 256
+$ ./test_cases/resources/table_test print_table_path ./out/0.tbl | sort
+$ exit
+exit

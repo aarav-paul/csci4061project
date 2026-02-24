@@ -1,0 +1,5 @@
+$ rm -f ./intermediate/*
+$ rm -f ./out/*
+$ ./mapreduce ./logs 1 1 | sort
+$ exit
+exit

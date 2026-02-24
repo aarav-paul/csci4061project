@@ -1,0 +1,8 @@
+$ rm -rf ./intermediate/*
+$ ./mapreduce ./logs 5 1 > /dev/null
+$ ls ./intermediate | sort
+$ rm -rf ./intermediate/*
+$ ./mapreduce ./logs 1 1 > /dev/null
+$ ls ./intermediate | sort
+$ exit
+exit
