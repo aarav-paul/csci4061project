@@ -90,7 +90,7 @@ int reduce_file(table_t *table, const char file_path[MAX_PATH], const int start,
     table_t *temp = table_from_file(file_path);
 
     if (temp == NULL) {
-        return -1;
+        return 1;
     }
 
     for (int i = 0; i < TABLE_LEN; i++) {
@@ -110,14 +110,15 @@ int reduce_file(table_t *table, const char file_path[MAX_PATH], const int start,
 
                     if (new_bucket == NULL) {
                         table_free(temp);
-                        return -1;
+                        return 1;
                     }
+
                     new_bucket->requests = bucket->requests;
 
                     if (table_add(table, new_bucket) != 0) {
                         free(new_bucket);
                         table_free(temp);
-                        return -1;
+                        return 1;
                     }
                 }
             }
