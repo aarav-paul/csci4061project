@@ -6,11 +6,24 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "./include/table.h"
+
 #define MAX_FILES 1024
-#define MAX_PATH 512
+#define MAX_PATH 1024
+
+struct record {
+  char ip[IP_LEN];
+  int requests;
+};
+
+int cmp_record(const void *a, const void *b) {
+  const struct record *ra = a;
+  const struct record *rb = b;
+  return strcmp(ra->ip, rb->ip);
+}
 
 int main(int argc, char *argv[]) {
-  if (argc != 4) {
+  if (argc < 4) {
     fprintf(stderr, "Usage: mapreduce <directory> <n mappers> <n reducers>\n");
     return 1;
   }
@@ -30,142 +43,218 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // Read all files into array
   char *files[MAX_FILES];
   int file_count = 0;
   struct dirent *entry;
+
   while ((entry = readdir(dir)) != NULL) {
     if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
       continue;
-    if (file_count >= MAX_FILES)
-      break;
     files[file_count] = malloc(MAX_PATH);
+    if (!files[file_count]) {
+      fprintf(stderr, "malloc failed\n");
+      closedir(dir);
+      return 1;
+    }
     snprintf(files[file_count], MAX_PATH, "%s/%s", dir_name, entry->d_name);
     file_count++;
+    if (file_count >= MAX_FILES)
+      break;
   }
   closedir(dir);
 
   if (file_count == 0) {
-    fprintf(stderr, "No files found in directory\n");
+    fprintf(stderr, "No files found in directory.\n");
     return 1;
   }
 
-  // Split files among mappers
-  int base_files = file_count / n_mappers;
-  int extra = file_count % n_mappers;
-  int start = 0;
-  pid_t map_pids[n_mappers];
+  if (mkdir("./intermediate", 0777) < 0 && errno != EEXIST) {
+    perror("mkdir intermediate");
+    return 1;
+  }
+
+  int files_per_mapper = file_count / n_mappers;
+  int remainder = file_count % n_mappers;
+  int file_index = 0;
+
+  pid_t mapper_pids[n_mappers];
 
   for (int i = 0; i < n_mappers; i++) {
-    int count = base_files + (i < extra ? 1 : 0);
+    int count = files_per_mapper + (i < remainder ? 1 : 0);
 
     pid_t pid = fork();
-    if (pid == 0) { // child
-      char outfile[MAX_PATH];
-      snprintf(outfile, MAX_PATH, "./intermediate/%d.tbl", i);
+    if (pid < 0) {
+      perror("fork");
+      return 1;
+    }
 
-      // Build args array for exec
-      char *args[count + 3]; // ./map, outfile, files..., NULL
+    if (pid == 0) {
+      char outfile[MAX_PATH];
+      snprintf(outfile, sizeof(outfile), "./intermediate/%d.tbl", i);
+
+      char *args[count + 3];
       args[0] = "./map";
       args[1] = outfile;
-      for (int j = 0; j < count; j++)
-        args[j + 2] = files[start + j];
+
+      for (int j = 0; j < count; j++) {
+        args[j + 2] = files[file_index + j];
+      }
       args[count + 2] = NULL;
 
-      execvp(args[0], args);
-      perror("execvp");
+      execv("./map", args);
+      perror("execv failed");
       exit(1);
-    } else if (pid > 0) { // parent
-      map_pids[i] = pid;
     } else {
-      perror("fork");
-      return 1;
+      mapper_pids[i] = pid;
+      file_index += count;
     }
-    start += count;
   }
 
-  // Wait for all mappers
   for (int i = 0; i < n_mappers; i++) {
     int status;
-    if (waitpid(map_pids[i], &status, 0) == -1) {
-      perror("waitpid");
-      return 1;
-    }
+    waitpid(mapper_pids[i], &status, 0);
     if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
-      fprintf(stderr, "Mapper %d exited with error\n", i);
+      fprintf(stderr, "mapreduce: mapper %d failed\n", i);
       return 1;
     }
   }
 
-  // Split IP key space for reducers
-  int keys_per = 256 / n_reducers;
-  int remainder = 256 % n_reducers;
-  int key_start = 0;
-  pid_t reduce_pids[n_reducers];
+  int range_per_reducer = 256 / n_reducers;
+  int range_remainder = 256 % n_reducers;
+
+  pid_t reducer_pids[n_reducers];
 
   for (int i = 0; i < n_reducers; i++) {
-    int key_end = key_start + keys_per + (i < remainder ? 1 : 0);
+    int start_ip =
+        i * range_per_reducer + (i < range_remainder ? i : range_remainder);
+    int end_ip = start_ip + range_per_reducer + (i < range_remainder ? 1 : 0);
 
     pid_t pid = fork();
-    if (pid == 0) { // child
-      char outfile[MAX_PATH];
-      snprintf(outfile, MAX_PATH, "./out/%d.tbl", i);
-
-      char start_ip[4], end_ip[4];
-      snprintf(start_ip, 4, "%d", key_start);
-      snprintf(end_ip, 4, "%d", key_end);
-
-      char *args[] = {"./reduce", "./intermediate", outfile,
-                      start_ip,   end_ip,           NULL};
-      execvp(args[0], args);
-      perror("execvp");
-      exit(1);
-    } else if (pid > 0) { // parent
-      reduce_pids[i] = pid;
-    } else {
+    if (pid < 0) {
       perror("fork");
       return 1;
     }
 
-    key_start = key_end;
+    if (pid == 0) {
+      char outfile[MAX_PATH];
+      snprintf(outfile, sizeof(outfile), "./out/%d.tbl", i);
+
+      char start_str[4], end_str[4];
+      snprintf(start_str, sizeof(start_str), "%d", start_ip);
+      snprintf(end_str, sizeof(end_str), "%d", end_ip);
+
+      char *args[] = {"./reduce", "./intermediate", outfile,
+                      start_str,  end_str,          NULL};
+      execv("./reduce", args);
+      perror("execv failed");
+      exit(1);
+    } else {
+      reducer_pids[i] = pid;
+    }
   }
 
-  // Wait for all reducers
   for (int i = 0; i < n_reducers; i++) {
     int status;
-    if (waitpid(reduce_pids[i], &status, 0) == -1) {
-      perror("waitpid");
-      return 1;
-    }
+    waitpid(reducer_pids[i], &status, 0);
     if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
-      fprintf(stderr, "Reducer %d exited with error\n", i);
+      fprintf(stderr, "mapreduce: reducer %d failed\n", i);
       return 1;
     }
   }
 
-  // Print out all reducer outputs
-  DIR *out_dir = opendir("./out");
-  if (!out_dir) {
-    perror("opendir");
+  table_t *global = table_init();
+  if (!global) {
+    fprintf(stderr, "Failed to init global table\n");
     return 1;
   }
-  while ((entry = readdir(out_dir)) != NULL) {
+
+  dir = opendir("./out");
+  if (!dir) {
+    perror("opendir out");
+    table_free(global);
+    return 1;
+  }
+
+  while ((entry = readdir(dir)) != NULL) {
     if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
       continue;
+
     char path[MAX_PATH];
     snprintf(path, MAX_PATH, "./out/%s", entry->d_name);
-    FILE *f = fopen(path, "r");
-    if (!f)
-      continue;
-    char buf[512];
-    while (fgets(buf, sizeof(buf), f)) {
-      printf("%s", buf);
-    }
-    fclose(f);
-  }
-  closedir(out_dir);
 
-  // Free allocated memory
+    table_t *t = table_from_file(path);
+    if (!t) {
+      fprintf(stderr, "Failed to load table from %s\n", path);
+      continue;
+    }
+
+    for (int i = 0; i < TABLE_LEN; i++) {
+      bucket_t *b = t->buckets[i];
+      while (b) {
+        bucket_t *g = table_get(global, b->ip);
+        if (g) {
+          g->requests += b->requests;
+        } else {
+          bucket_t *nb = bucket_init(b->ip);
+          if (!nb) {
+            table_free(t);
+            closedir(dir);
+            table_free(global);
+            return 1;
+          }
+          nb->requests = b->requests;
+          if (table_add(global, nb) != 0) {
+            free(nb);
+            table_free(t);
+            closedir(dir);
+            table_free(global);
+            return 1;
+          }
+        }
+        b = b->next;
+      }
+    }
+    table_free(t);
+  }
+  closedir(dir);
+
+  int count = 0;
+  for (int i = 0; i < TABLE_LEN; i++) {
+    bucket_t *b = global->buckets[i];
+    while (b) {
+      count++;
+      b = b->next;
+    }
+  }
+
+  struct record *arr = malloc(sizeof(struct record) * count);
+  if (!arr) {
+    fprintf(stderr, "malloc failed\n");
+    table_free(global);
+    return 1;
+  }
+
+  int idx = 0;
+  for (int i = 0; i < TABLE_LEN; i++) {
+    bucket_t *b = global->buckets[i];
+    while (b) {
+      strncpy(arr[idx].ip, b->ip, IP_LEN);
+      arr[idx].ip[IP_LEN - 1] = '\0';
+      arr[idx].requests = b->requests;
+      idx++;
+      b = b->next;
+    }
+  }
+
+  qsort(arr, count, sizeof(struct record), cmp_record);
+
+  for (int i = 0; i < count; i++) {
+    printf("%s - %d\n", arr[i].ip, arr[i].requests);
+  }
+
+  free(arr);
+  table_free(global);
+
   for (int i = 0; i < file_count; i++)
     free(files[i]);
 
