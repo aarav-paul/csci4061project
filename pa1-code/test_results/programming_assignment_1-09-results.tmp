@@ -1,0 +1,8 @@
+=======================================================================================================================================================
+== Test 9: Mapreduce with not enough args
+== Test the mapreduce program to make sure that it checks the number of args
+== properly
+Running test...
+Expected output is in file 'test_results/raw/programming_assignment_1-09-expected.tmp'
+Actual output is in file 'test_results/raw/programming_assignment_1-09-actual.tmp'
+Test PASSED

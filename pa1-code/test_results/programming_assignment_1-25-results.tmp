@@ -1,0 +1,8 @@
+=======================================================================================================================================================
+== Test 25: Reduce write to requested file
+== The reduce program writes to the requested file. It should be the second
+== parameter input to the executable
+Running test...
+Expected output is in file 'test_results/raw/programming_assignment_1-25-expected.tmp'
+Actual output is in file 'test_results/raw/programming_assignment_1-25-actual.tmp'
+Test PASSED

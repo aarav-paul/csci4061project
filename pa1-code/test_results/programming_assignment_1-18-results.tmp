@@ -1,0 +1,8 @@
+=======================================================================================================================================================
+== Test 18: Number of reducer files
+== The mapreduce program creates the correct number of intermediate files (one
+== file / reducer)
+Running test...
+Expected output is in file 'test_results/raw/programming_assignment_1-18-expected.tmp'
+Actual output is in file 'test_results/raw/programming_assignment_1-18-actual.tmp'
+Test PASSED

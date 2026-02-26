@@ -1,0 +1,4 @@
+$ ./map x
+Usage: map <outfile> <infiles...>
+$ exit
+exit

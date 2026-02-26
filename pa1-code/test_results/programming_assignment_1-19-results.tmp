@@ -1,0 +1,8 @@
+=======================================================================================================================================================
+== Test 19: Reduce with not enough args
+== The reduce program prints the requested error if it is called with not enough
+== arguments
+Running test...
+Expected output is in file 'test_results/raw/programming_assignment_1-19-expected.tmp'
+Actual output is in file 'test_results/raw/programming_assignment_1-19-actual.tmp'
+Test PASSED

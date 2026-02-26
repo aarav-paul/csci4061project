@@ -1,0 +1,14 @@
+$ rm -rf ./intermediate/*
+$ ./mapreduce ./logs 5 1 > /dev/null
+$ ls ./intermediate | sort
+0.tbl
+1.tbl
+2.tbl
+3.tbl
+4.tbl
+$ rm -rf ./intermediate/*
+$ ./mapreduce ./logs 1 1 > /dev/null
+$ ls ./intermediate | sort
+0.tbl
+$ exit
+exit

@@ -1,0 +1,7 @@
+=======================================================================================================================================================
+== Test 2: Table add
+== Test adding 5 buckets with unique IPs to the table
+Running test...
+Expected output is in file 'test_results/raw/programming_assignment_1-02-expected.tmp'
+Actual output is in file 'test_results/raw/programming_assignment_1-02-actual.tmp'
+Test PASSED

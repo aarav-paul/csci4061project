@@ -1,0 +1,4 @@
+$ ./mapreduce x -1 -1
+mapreduce: cannot have less than one mapper or reducer
+$ exit
+exit

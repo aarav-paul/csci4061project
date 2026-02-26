@@ -1,0 +1,14 @@
+$ rm -rf ./out/*
+$ ./mapreduce ./logs 5 5 > /dev/null
+$ ls ./out | sort
+0.tbl
+1.tbl
+2.tbl
+3.tbl
+4.tbl
+$ rm -rf ./out/*
+$ ./mapreduce ./logs 1 1 > /dev/null
+$ ls ./out | sort
+0.tbl
+$ exit
+exit

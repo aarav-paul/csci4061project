@@ -1,0 +1,7 @@
+=======================================================================================================================================================
+== Test 11: Mapreduce with invalid directory
+== Test the mapreduce program with with an invalid directory argument
+Running test...
+Expected output is in file 'test_results/raw/programming_assignment_1-11-expected.tmp'
+Actual output is in file 'test_results/raw/programming_assignment_1-11-actual.tmp'
+Test PASSED

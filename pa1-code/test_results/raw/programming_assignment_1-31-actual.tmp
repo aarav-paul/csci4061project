@@ -1,0 +1,8 @@
+$ rm -f ./intermediate/*
+$ rm -f ./out/*
+$ ./mapreduce ./logs 24 255 | sort
+����
+$ rm -f ./intermediate/*
+$ rm -f ./out/*
+$ exit
+exit

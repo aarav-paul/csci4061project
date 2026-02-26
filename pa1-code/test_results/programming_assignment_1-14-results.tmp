@@ -1,0 +1,8 @@
+=======================================================================================================================================================
+== Test 14: Map fail with invalid input file
+== The map program fails with an invalid input file. It must print the error
+== message specified in the writeup
+Running test...
+Expected output is in file 'test_results/raw/programming_assignment_1-14-expected.tmp'
+Actual output is in file 'test_results/raw/programming_assignment_1-14-actual.tmp'
+Test PASSED

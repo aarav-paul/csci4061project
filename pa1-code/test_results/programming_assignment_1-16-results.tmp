@@ -1,0 +1,7 @@
+=======================================================================================================================================================
+== Test 16: Map single file
+== The map program correctly maps data from one log file into a table.
+Running test...
+Expected output is in file 'test_results/raw/programming_assignment_1-16-expected.tmp'
+Actual output is in file 'test_results/raw/programming_assignment_1-16-actual.tmp'
+Test PASSED

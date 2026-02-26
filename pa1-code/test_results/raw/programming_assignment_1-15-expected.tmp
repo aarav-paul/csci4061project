@@ -1,0 +1,6 @@
+$ ./map ./temp.tbl ./logs/0.log
+$ ls | grep temp.tbl
+temp.tbl
+$ rm temp.tbl
+$ exit
+exit
